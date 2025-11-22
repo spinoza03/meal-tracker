@@ -3,17 +3,19 @@ import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import QRCode from 'react-qr-code';
+import { useAuth } from '../context/AuthContext';
 import './GuestQRCodePage.css';
-import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
+
+// Make sure your logo file name matches this import!
+import logo from '../assets/logo.png'; 
 
 function GuestQRCodePage() {
-  const { id } = useParams(); // Gets the guest's ID from the URL
-  const { currentUser } = useAuth(); // Gets the currently logged-in user
+  const { id } = useParams();
+  const { currentUser } = useAuth();
   const [guest, setGuest] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This function fetches the specific guest's data from Firestore
     const fetchGuest = async () => {
       setLoading(true);
       try {
@@ -21,8 +23,6 @@ function GuestQRCodePage() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setGuest(docSnap.data());
-        } else {
-          console.log("No such guest!");
         }
       } catch (error) {
         console.error("Error fetching guest:", error);
@@ -30,36 +30,50 @@ function GuestQRCodePage() {
         setLoading(false);
       }
     };
-
     fetchGuest();
-  }, [id]); // Re-run this effect if the ID in the URL changes
+  }, [id]);
 
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
-
-  if (!guest) {
-    return <h2>Guest not found.</h2>;
-  }
+  if (loading) return <div className="qr-page-container">Loading your pass...</div>;
+  if (!guest) return <div className="qr-page-container">Guest Pass Not Found</div>;
 
   return (
     <div className="qr-page-container">
-      {/* THIS IS THE FIX:
-        This link will only be displayed if...
-        1. A user is currently logged in (currentUser exists)
-        2. AND the logged-in user's ID is NOT the same as the ID of the guest on this page.
-        This means only an Admin or Staff member viewing another guest's page will see it.
-      */}
-      {currentUser && currentUser.uid !== id && (
-        <Link to="/admin" className="back-link">← Back to Admin</Link>
-      )}
+      
+      {/* The Glass Card */}
+      <div className="ticket-card">
+        
+        {/* Logo Section */}
+        <img src={logo} alt="Festival Logo" className="logo-img" />
+        
+        {/* Guest Details */}
+        <h1 className="guest-name">{guest.name}</h1>
+        
+        {/* Dynamic Badge Color based on Guest Type */}
+        <span className={`guest-badge badge-${guest.guest_type || 'Standard'}`}>
+          {guest.guest_type || 'Standard'} Guest
+        </span>
 
-      <h1>Scan Pass</h1>
-      <h2>{guest.name}</h2>
-      <p>{guest.guest_type}</p>
-      <div className="qr-code-wrapper">
-        <QRCode value={id} />
+        {/* QR Code with White Frame */}
+        <div className="qr-frame">
+          <QRCode 
+            value={id} 
+            size={200}
+            fgColor="#1a1a1a" // Dark QR code for contrast
+          />
+        </div>
+
+        <p style={{ marginTop: '1.5rem', fontSize: '0.8rem', opacity: 0.7 }}>
+          Present this QR code at the entrance.
+        </p>
+
       </div>
+
+      {/* Admin Back Link (Only if logged in as staff/admin) */}
+      {currentUser && currentUser.uid !== id && (
+        <Link to="/admin" className="back-link">
+          ← Back to Dashboard
+        </Link>
+      )}
     </div>
   );
 }

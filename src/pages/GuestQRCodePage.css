@@ -1,22 +1,106 @@
+/* Animated background gradient */
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .qr-page-container {
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  /* Deep Blue + Festival Orange/Red colors from your logo */
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #5b21b6);
+  background-size: 400% 400%;
+  animation: gradient-move 15s ease infinite;
+  padding: 1rem;
+  color: white;
 }
 
-.qr-code-wrapper {
-  background-color: white;
+/* The Glass Card */
+.ticket-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Decorative circles behind the glass */
+.ticket-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(217, 93, 57, 0.4) 0%, transparent 70%); /* Orange from logo */
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.logo-img {
+  width: 120px;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.guest-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.guest-badge {
+  display: inline-block;
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Specific badge colors */
+.badge-VIP { background: linear-gradient(90deg, #FFD700, #FFA500); color: black; border: none; }
+.badge-Press { background: linear-gradient(90deg, #3B82F6, #2563EB); border: none; }
+.badge-Artist { background: linear-gradient(90deg, #ec4899, #8b5cf6); border: none; }
+.badge-Standard { background: rgba(255, 255, 255, 0.1); }
+
+.qr-frame {
+  background: white;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 16px;
+  display: inline-block;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 .back-link {
-  align-self: flex-start;
-  color: #646cff;
+  margin-top: 2rem;
+  color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  transition: color 0.3s;
 }
-.back-link:hover {
-  text-decoration: underline;
-}
+.back-link:hover { color: white; }

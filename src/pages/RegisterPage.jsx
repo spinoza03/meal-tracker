@@ -50,7 +50,7 @@ function RegisterPage() {
 
   return (
     <div className="auth-container">
-      <form onSubmit={handleRegister} className="auth-form">
+      <form onSubmit={handleLogin} className="auth-form glass-card">
         <h2>Guest Registration</h2>
         {error && <p className="error-message">{error}</p>}
         <input

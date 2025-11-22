@@ -1,55 +1,35 @@
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
+/* Auth.css - Simplified because global CSS handles most inputs now */
+
+/* We remove .auth-container centering because App.css handles it now */
 
 .auth-form {
   width: 100%;
-  max-width: 400px;
-  background-color: #2f2f2f;
-  padding: 2rem;
-  border-radius: 8px;
+  max-width: 420px;
+  /* Apply the glass effect */
+  /* We will add the 'glass-card' class in the JSX file directly */
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
+  text-align: center;
 }
 
 .auth-form h2 {
-  margin-top: 0;
-  text-align: center;
-}
-
-.auth-form input {
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: #3f3f3f;
-  color: white;
-  font-size: 1rem;
-}
-
-.auth-form button {
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
-  border: none;
-  background-color: #646cff;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
 }
 
 .error-message {
-  color: #ff4d4d;
-  background-color: rgba(255, 77, 77, 0.1);
-  border: 1px solid #ff4d4d;
+  background: rgba(255, 77, 77, 0.2);
+  border: 1px solid rgba(255, 77, 77, 0.5);
+  color: #ffaaaa;
   padding: 0.8rem;
-  border-radius: 4px;
-  text-align: center;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  backdrop-filter: blur(5px);
 }
 
 .auth-form p {
-  text-align: center;
   margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
 }
