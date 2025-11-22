@@ -1,0 +1,206 @@
+.guest-manager-container {
+  background-color: #2f2f2f;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.guest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.guest-form input,
+.guest-form select {
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background-color: #3f3f3f;
+  color: white;
+  font-size: 1rem;
+}
+
+.guest-form button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #646cff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.guest-form button:hover {
+  background-color: #535bf2;
+}
+
+.guest-list h3 {
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.guest-item {
+  background-color: #3f3f3f;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.guest-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #ff4d4d;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #cc0000;
+}
+/* Add these new styles to the end of your file */
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #4d88ff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: #0055ff;
+}
+
+.edit-form {
+  gap: 0.5rem;
+}
+
+.edit-form input,
+.edit-form select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.save-button, .cancel-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-button {
+  background-color: #28a745; /* green */
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #6c757d; /* gray */
+}
+
+.cancel-button:hover {
+  background-color: #5a6268;
+}
+.action-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px; /* Matches button font size */
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.qr-button {
+  background-color: #f2a900; /* A gold/yellow color */
+}
+
+.qr-button:hover {
+  background-color: #c78b00;
+}
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.scanner-link, .dashboard-link {
+  flex: 1; /* Make buttons take equal space */
+  display: block;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.scanner-link {
+  background-color: #28a745;
+}
+.scanner-link:hover {
+  background-color: #218838;
+}
+
+.dashboard-link {
+  background-color: #4d88ff;
+}
+.dashboard-link:hover {
+  background-color: #0055ff;
+}
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3f3f3f;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+.header-bar p {
+  margin: 0;
+}
+.logout-button {
+  background-color: #ff4d4d;
+}
+.logout-button:hover {
+  background-color: #cc0000;
+}

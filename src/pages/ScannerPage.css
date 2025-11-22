@@ -1,0 +1,85 @@
+.scanner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.reader-wrapper {
+  width: 100%;
+  padding-top: 100%; /* This creates a 1:1 aspect ratio box */
+  position: relative;
+  border: 2px solid #555;
+  border-radius: 8px;
+  overflow: hidden; /* This clips the corners */
+}
+
+.qr-reader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scan-result {
+  background-color: #2f2f2f;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.message {
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.message.success {
+  color: #28a745;
+}
+
+.message.error {
+  color: #ff4d4d;
+}
+
+.guest-details {
+  margin-top: 1rem;
+  border-top: 1px solid #555;
+  padding-top: 1rem;
+}
+
+.meal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.meal-buttons button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #646cff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.scanner-link {
+  display: block;
+  background-color: #28a745;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  transition: background-color 0.2s;
+}
+.scanner-link:hover {
+  background-color: #218838;
+}
