@@ -104,3 +104,80 @@
   transition: color 0.3s;
 }
 .back-link:hover { color: white; }
+/* ... (Keep all your existing code above this) ... */
+
+/* --- Print Button Style --- */
+.print-btn {
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.print-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* --- PRINT MEDIA QUERY (The Magic Part) --- */
+@media print {
+  /* 1. Hide everything we don't need on paper */
+  .print-btn, .back-link, .sidebar, .mobile-menu-btn, .mobile-overlay {
+    display: none !important;
+  }
+
+  /* 2. Reset the page background to white to save ink */
+  body, .qr-page-container, .app-layout, .main-content-full {
+    background: white !important;
+    animation: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    display: block !important;
+  }
+
+  /* 3. Style the card specifically for a physical badge */
+  .ticket-card {
+    box-shadow: none !important;
+    border: 2px solid #000 !important; /* Sharp border */
+    color: black !important; /* Black text for contrast */
+    background: white !important; /* White bg */
+    
+    /* Center the badge on the paper */
+    margin: 0 auto;
+    position: absolute;
+    top: 10%; /* Move slightly down from top edge */
+    left: 50%;
+    transform: translate(-50%, 0);
+    
+    width: 100%;
+    max-width: 350px; /* Standard badge width */
+    
+    /* Ensure colors print accurately */
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact;
+  }
+
+  /* 4. Fix inner elements for print */
+  .guest-name {
+    color: black !important;
+    text-shadow: none !important;
+  }
+  
+  .guest-badge {
+    border: 1px solid #000 !important;
+    color: black !important;
+    background: transparent !important;
+  }
+
+  /* Remove the decorative colored circle background */
+  .ticket-card::before {
+    display: none;
+  }
+}

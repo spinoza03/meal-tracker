@@ -33,32 +33,33 @@ function GuestQRCodePage() {
     fetchGuest();
   }, [id]);
 
+  // NEW: The function that triggers the browser's print dialog
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (loading) return <div className="qr-page-container">Loading your pass...</div>;
   if (!guest) return <div className="qr-page-container">Guest Pass Not Found</div>;
 
   return (
     <div className="qr-page-container">
       
-      {/* The Glass Card */}
+      {/* The Glass Card - This is what we want to print */}
       <div className="ticket-card">
         
-        {/* Logo Section */}
         <img src={logo} alt="Festival Logo" className="logo-img" />
         
-        {/* Guest Details */}
         <h1 className="guest-name">{guest.name}</h1>
         
-        {/* Dynamic Badge Color based on Guest Type */}
         <span className={`guest-badge badge-${guest.guest_type || 'Standard'}`}>
           {guest.guest_type || 'Standard'} Guest
         </span>
 
-        {/* QR Code with White Frame */}
         <div className="qr-frame">
           <QRCode 
             value={id} 
             size={200}
-            fgColor="#1a1a1a" // Dark QR code for contrast
+            fgColor="#1a1a1a"
           />
         </div>
 
@@ -68,7 +69,12 @@ function GuestQRCodePage() {
 
       </div>
 
-      {/* Admin Back Link (Only if logged in as staff/admin) */}
+      {/* NEW: Print Button */}
+      <button onClick={handlePrint} className="print-btn">
+        🖨️ Print Badge
+      </button>
+
+      {/* Admin Back Link */}
       {currentUser && currentUser.uid !== id && (
         <Link to="/admin" className="back-link">
           ← Back to Dashboard

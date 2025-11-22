@@ -60,6 +60,28 @@
   margin-top: 1rem;
 }
 
+.meal-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  min-width: 90px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s;
+}
+
+.meal-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.meal-btn:active {
+  transform: scale(0.95);
+}
+
 .meal-buttons button {
   padding: 0.8rem 1.5rem;
   border: none;

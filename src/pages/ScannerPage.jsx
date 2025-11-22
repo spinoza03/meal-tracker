@@ -3,13 +3,18 @@ import { Scanner } from '@yudiel/react-qr-scanner';
 import { doc, getDoc, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase.js';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast'; // Import the toast function
 import './ScannerPage.css';
 
 function ScannerPage() {
   const [scannedGuestId, setScannedGuestId] = useState('');
   const [scannedGuestData, setScannedGuestData] = useState(null);
-  const [message, setMessage] = useState('Please scan a guest QR code.');
   const [loading, setLoading] = useState(false);
+
+  // Sound effect for successful scan (Optional but nice)
+  const playSuccessSound = () => {
+    // You can add a real sound file later if you want
+  };
 
   useEffect(() => {
     if (!scannedGuestId) return;
@@ -17,21 +22,24 @@ function ScannerPage() {
     const fetchGuest = async () => {
       setLoading(true);
       setScannedGuestData(null);
-      setMessage('Searching for guest...');
+      
+      // Show a loading toast while searching
+      const loadingToast = toast.loading('Searching for guest...');
+
       try {
         const docRef = doc(db, 'guests', scannedGuestId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           setScannedGuestData({ id: docSnap.id, ...docSnap.data() });
-          setMessage(`Guest Found: ${docSnap.data().name}`);
+          toast.success(`Guest Found: ${docSnap.data().name}`, { id: loadingToast });
         } else {
           setScannedGuestData(null);
-          setMessage('Error: Invalid QR Code. Guest not found.');
+          toast.error('Invalid QR Code. Guest not found.', { id: loadingToast });
         }
       } catch (error) {
         console.error("Error fetching guest:", error);
-        setMessage('An error occurred while fetching guest data.');
+        toast.error('Connection Error. Please try again.', { id: loadingToast });
       } finally {
         setLoading(false);
       }
@@ -40,21 +48,17 @@ function ScannerPage() {
     fetchGuest();
   }, [scannedGuestId]);
 
-  // NEW: This is the final logic for redeeming a meal.
   const handleMealRedemption = async (mealType) => {
     if (!scannedGuestData) {
-      setMessage('No guest scanned!');
+      toast.error('No guest scanned!');
       return;
     }
 
     setLoading(true);
-    setMessage(`Checking for ${mealType}...`);
+    const loadingToast = toast.loading(`Checking ${mealType} status...`);
 
     try {
-      // Get today's date in YYYY-MM-DD format
       const todayString = new Date().toISOString().split('T')[0];
-
-      // Query the meal_log to see if this guest already had this meal today
       const mealLogRef = collection(db, 'meal_log');
       const q = query(mealLogRef,
         where("guestId", "==", scannedGuestData.id),
@@ -65,31 +69,48 @@ function ScannerPage() {
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // If the query returns any documents, it means the meal was already claimed.
-        setMessage(`${mealType} already redeemed today for ${scannedGuestData.name}.`);
+        // ERROR: Meal already eaten
+        toast.error(`${mealType} ALREADY REDEEMED today!`, {
+          id: loadingToast,
+          duration: 4000, // Stay visible longer
+          icon: '⚠️',
+          style: {
+            background: '#ff4d4d',
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        });
       } else {
-        // If the query is empty, we can add the new meal log.
-        const newLogEntry = {
+        // SUCCESS: Redeem meal
+        await addDoc(mealLogRef, {
           guestId: scannedGuestData.id,
           guestName: scannedGuestData.name,
           mealType: mealType,
           date: todayString,
           timestamp: new Date()
-        };
-        await addDoc(mealLogRef, newLogEntry);
-        setMessage(`${mealType} successfully redeemed for ${scannedGuestData.name}!`);
+        });
+        
+        toast.success(`${mealType} Redeemed Successfully!`, {
+          id: loadingToast,
+          duration: 3000,
+          style: {
+            background: '#28a745',
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        });
+        playSuccessSound();
       }
     } catch (error) {
       console.error("Error redeeming meal:", error);
-      setMessage("An error occurred. Please try again.");
+      toast.error("System Error. Try again.", { id: loadingToast });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="scanner-container">
-      <Link to="/" className="back-link">← Back to Admin</Link>
+    <div className="scanner-container glass-card" style={{ marginTop: '2rem' }}>
       <h2>Staff Scanner</h2>
       <div className="reader-wrapper">
         <Scanner
@@ -99,18 +120,31 @@ function ScannerPage() {
           options={{ delayBetweenScanAttempts: 1000, delayBetweenScanSuccess: 2000 }}
         />
       </div>
+      
       <div className="scan-result">
-        <h3>Scan Status</h3>
-        <p className={`message ${scannedGuestData && !message.includes('Error') ? 'success' : 'error'}`}>{message}</p>
+        {/* We removed the text message area because Toasts handle it now */}
+        
+        {!scannedGuestData && !loading && (
+          <p style={{opacity: 0.5, marginTop: '1rem'}}>Ready to scan...</p>
+        )}
 
         {scannedGuestData && (
-          <div className="guest-details">
-            <h4>{scannedGuestData.name}</h4>
-            <p><strong>Type:</strong> {scannedGuestData.guest_type}</p>
+          <div className="guest-details" style={{ animation: 'fadeIn 0.5s' }}>
+            <h2 style={{ color: '#4d88ff', marginBottom: '0.5rem' }}>{scannedGuestData.name}</h2>
+            <span className={`guest-badge badge-${scannedGuestData.guest_type || 'Standard'}`}>
+              {scannedGuestData.guest_type || 'Standard'}
+            </span>
+            
             <div className="meal-buttons">
-              <button onClick={() => handleMealRedemption('Breakfast')} disabled={loading}>Breakfast</button>
-              <button onClick={() => handleMealRedemption('Lunch')} disabled={loading}>Lunch</button>
-              <button onClick={() => handleMealRedemption('Dinner')} disabled={loading}>Dinner</button>
+              <button className="meal-btn" onClick={() => handleMealRedemption('Breakfast')} disabled={loading}>
+                🍳 Breakfast
+              </button>
+              <button className="meal-btn" onClick={() => handleMealRedemption('Lunch')} disabled={loading}>
+                tg🥘 Lunch
+              </button>
+              <button className="meal-btn" onClick={() => handleMealRedemption('Dinner')} disabled={loading}>
+                🍽️ Dinner
+              </button>
             </div>
           </div>
         )}

@@ -1,5 +1,6 @@
-import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast'; // IMPORT THIS
 import GuestManager from './components/GuestManager';
 import GuestQRCodePage from './pages/GuestQRCodePage';
 import ScannerPage from './pages/ScannerPage';
@@ -7,38 +8,59 @@ import Dashboard from './pages/Dashboard';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import Sidebar from './components/Sidebar'; // We import the new Sidebar here
+import Sidebar from './components/Sidebar';
+import { useAuth } from './context/AuthContext';
 import './App.css';
+
+function RootRedirect() {
+  const { currentUser, loading } = useAuth();
+  if (loading) return null;
+  return currentUser ? <Navigate to="/admin" /> : <Navigate to="/login" />;
+}
 
 function App() {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // We define which pages should NOT have the sidebar (like login or public guest pages)
   const noSidebarRoutes = ['/login', '/register', '/guest/'];
-  
-  // Logic: If the current URL starts with any of the routes above, hide the sidebar.
   const showSidebar = !noSidebarRoutes.some(path => location.pathname.startsWith(path));
 
   return (
     <div className="app-layout">
-       {/* Conditional Rendering: Only show sidebar if showSidebar is true */}
-      {showSidebar && <Sidebar />}
+      {/* Add the Toaster here. This manages all your popups. */}
+      <Toaster position="top-center" reverseOrder={false} />
+
+      {showSidebar && (
+        <button 
+          className="mobile-menu-btn" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          ☰
+        </button>
+      )}
+
+      {showSidebar && (
+        <Sidebar 
+          isOpen={isMobileMenuOpen} 
+          onClose={() => setIsMobileMenuOpen(false)} 
+        />
+      )}
       
-      {/* Dynamic Class: If sidebar is showing, push content to the right. If not, center it. */}
+      {showSidebar && isMobileMenuOpen && (
+        <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+      
       <main className={showSidebar ? 'main-content-with-sidebar' : 'main-content-full'}>
         <Routes>
-          {/* Public Routes */}
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/guest/:id" element={<GuestQRCodePage />} />
 
-          {/* Protected Routes */}
           <Route path="/admin" element={<ProtectedRoute><GuestManager /></ProtectedRoute>} />
           <Route path="/scanner" element={<ProtectedRoute><ScannerPage /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           
-          {/* Default Route */}
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<RootRedirect />} />
         </Routes>
       </main>
     </div>

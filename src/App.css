@@ -1,34 +1,100 @@
-/* This container holds the sidebar AND the main content side-by-side */
+/* --- MAIN LAYOUT --- */
 .app-layout {
   display: flex;
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  position: relative;
 }
 
 /* STYLE 1: Full Width (For Login/Register) */
-/* This centers the content perfectly on the screen */
 .main-content-full {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem;
+  min-height: 100vh;
   width: 100%;
 }
 
 /* STYLE 2: With Sidebar (For Admin/Dashboard) */
-/* This pushes the content 290px to the right so it doesn't hide behind the sidebar */
 .main-content-with-sidebar {
   flex: 1;
-  margin-left: 290px; /* 250px sidebar width + 40px gap */
-  padding: 2rem 2rem 2rem 0; /* Padding on top, right, bottom */
-  max-width: 1200px; /* Prevents content from getting too wide on huge screens */
+  padding: 2rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* --- MOBILE & HAMBURGER MENU STYLES --- */
+
+/* Default: Hide the mobile button on desktop */
+.mobile-menu-btn, .mobile-overlay {
+  display: none;
+}
+
+/* Mobile Styles (Phones/Tablets) */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  /* This pushes the content down so it's not hidden behind the button */
+  .main-content-with-sidebar {
+    padding: 1rem;
+    padding-top: 5rem; 
+  }
+
+  /* THE FIX: Stylish Glass Button */
+  .mobile-menu-btn {
+    display: flex; /* Flex to center the icon */
+    align-items: center;
+    justify-content: center;
+    
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000; /* Ensure it sits on top */
+    
+    width: 50px;
+    height: 50px;
+    border-radius: 12px; /* Rounded corners */
+    
+    /* Glass Effect */
+    background: rgba(30, 41, 59, 0.7); /* Dark semi-transparent blue */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: background 0.2s;
+  }
+
+  .mobile-menu-btn:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.95);
+  }
+
+  /* The dark background when menu is open */
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5); /* Dark dimming effect */
+    z-index: 900; /* Below sidebar, above content */
+    backdrop-filter: blur(2px);
+  }
 }
 
 /* Global Typography Styles */
 h1, h2, h3 {
   font-weight: 700;
   letter-spacing: -0.5px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   margin-top: 0;
 }
