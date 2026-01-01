@@ -1,70 +1,57 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase.js';
-import './Auth.css'; // We'll reuse the CSS from the register page
+import React from 'react';
+import './Auth.css';
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      // 1. Sign in the user with Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // 2. Get the user's role from the 'users' collection in Firestore
-      const docRef = doc(db, 'users', user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        // 3. Redirect based on the role
-        if (userData.role === 'admin') {
-          navigate('/admin');
-        } else if (userData.role === 'staff') {
-          navigate('/scanner');
-        } else {
-          // It's a guest or has no role, redirect them to their QR page
-          navigate(`/guest/${user.uid}`);
-        }
-      } else {
-        setError("No role assigned to this user.");
-      }
-    } catch (err) {
-      setError("Failed to log in. Please check your email and password.");
-      console.error("Error during login:", err);
-    }
-  };
-
   return (
     <div className="auth-container">
-      <form onSubmit={handleLogin} className="auth-form glass-card">
-        <h2>Login</h2>
-        {error && <p className="error-message">{error}</p>}
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email Address"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
-        <p>Are you a guest? <Link to="/register">Register Here</Link></p>
-      </form>
+      <div className="auth-form glass-card">
+        
+        {/* Title */}
+        <h2>African Cinema Festival</h2>
+        
+        {/* The "Locked" Message */}
+        <div style={{ padding: '2rem 0' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+          
+          <h3 style={{ color: '#ffadad', marginBottom: '1rem' }}>Activation Required</h3>
+          
+          <p style={{ lineHeight: '1.6', color: 'rgba(255,255,255,0.8)', marginBottom: '1.5rem' }}>
+            This system is currently <strong>inactive</strong>. 
+            <br />
+            Access has been temporarily restricted pending final setup.
+          </p>
+          
+          {/* Your Contact Info */}
+          <div className="contact-info" style={{ 
+            background: 'rgba(255, 255, 255, 0.05)', 
+            padding: '1.5rem', 
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <p style={{ fontSize: '0.9rem', color: '#aaa', marginBottom: '0.5rem' }}>
+              To unlock the application, please contact the developer via WhatsApp:
+            </p>
+            
+            <a 
+              href="https://wa.me/212608301414" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="highlight" 
+              style={{ 
+                fontSize: '1.4rem', 
+                color: '#25D366', /* WhatsApp Green */
+                fontWeight: 'bold', 
+                display: 'block',
+                textDecoration: 'none',
+                marginTop: '0.5rem'
+              }}
+            >
+              📞 0608 30 14 14
+            </a>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
